@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+</head>
+<body>
+
+<h2>Welcome to the Money House!</h2>
+
+<div ng-app="loginPage" ng-controller="loginController">
+    <form name="login" ng-submit="submit()">
+        <input type="text" placeholder="username" ng-model="uname"><br>
+        <input type="password" placeholder="password" ng-model="pword"><br>
+        <input type="submit" id="submit" value="Login"/>
+    </form>
+</div>
+
+<script language="javascript">
+    var app = angular.module('loginPage', []);
+    app.controller('loginController', function($scope, $http, $window) {
+        // userID accessible at --> $window.sessionStorage.userID
+
+
+        $scope.submit = function() {
+
+            var login_http = $http({
+                method: 'POST',
+                url: '/login',
+                params: { username: $scope.uname, password: $scope.pword }
+            }).then(
+                    function (successfulResponse) {
+                        //$window.sessionStorage.userID = response.data[0].user_id;
+                        //$window.sessionStorage.username = response.data[0].login_name;
+
+                        /*if(response.data[0].type == 'admin') {
+                            $window.sessionStorage.admin = $scope.uname;
+                        }*/
+                        $window.location.href = '/casinoHomePage';
+                        alert("in success");
+
+                    }, function (errorResponse) {
+                        $window.location.href = '/';
+                    }
+            )
+        }
+    });
+</script>
+
+</body>
+</html>
