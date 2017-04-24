@@ -12,39 +12,36 @@
 
 <div ng-app="loginPage" ng-controller="loginController">
     <form name="login" ng-submit="submit()">
-        <input type="text" placeholder="username" ng-model="uname"><br>
-        <input type="password" placeholder="password" ng-model="pword"><br>
+        <input type="text" placeholder="username" ng-model="username"><br>
+        <input type="password" placeholder="password" ng-model="password"><br>
         <input type="submit" id="submit" value="Login"/>
     </form>
+    <input type="button" id="signUp" ng-click="signUpPage()" value="Sign Up"/>
 </div>
 
 <script language="javascript">
     var app = angular.module('loginPage', []);
     app.controller('loginController', function($scope, $http, $window) {
-        // userID accessible at --> $window.sessionStorage.userID
-
-
         $scope.submit = function() {
+            $window.sessionStorage.name = $scope.username;
 
             var login_http = $http({
                 method: 'POST',
                 url: '/login',
-                params: { username: $scope.uname, password: $scope.pword }
+                params: { username: $scope.username, password: $scope.password }
             }).then(
                     function (successfulResponse) {
-                        //$window.sessionStorage.userID = response.data[0].user_id;
-                        //$window.sessionStorage.username = response.data[0].login_name;
-
-                        /*if(response.data[0].type == 'admin') {
-                            $window.sessionStorage.admin = $scope.uname;
-                        }*/
+                        $window.sessionStorage.id = successfulResponse.data[0].user_id;
                         $window.location.href = '/casinoHomePage';
-                        alert("in success");
 
                     }, function (errorResponse) {
                         $window.location.href = '/';
                     }
             )
+        }
+
+        $scope.signUpPage = function() {
+            $window.location.href = '/signUpPage';
         }
     });
 </script>

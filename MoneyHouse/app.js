@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var mysql = require('mysql');
 
-const https = require('https');
+var http = require('http');
 var fs = require('fs');
 
 var options = {
@@ -15,19 +15,15 @@ var options = {
     cert: fs.readFileSync('./conf/cert.pem')
 };
 
-var server = https.createServer(options,app);
-var io = require('socket.io').listen(server);
-
-var port= process.env.PORT || 1024;
-server.listen(port, function(){
-    console.log('Server is running on port: '+port);
+var server = app.listen(1024, function() {
+    console.log('Server listening on port ' + server.address().port);
 });
 
-io.attach(server);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var routes = require('./routes/index');
+//var routes = require('./routes/index');
+var home = require('./routes/home');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,7 +38,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/', users);
+app.use('/', home);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

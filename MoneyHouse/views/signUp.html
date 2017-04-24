@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+</head>
+<body>
+
+<h2>Welcome to the Money House!</h2>
+
+<div ng-app="signUpPage" ng-controller="signUpController">
+    <form name="signUp" ng-submit="submit()">
+        <input type="text" placeholder="username" ng-model="username"><br>
+        <input type="password" placeholder="password" ng-model="password"><br>
+        <input type="submit" id="submit" value="Sign Up"/>
+    </form>
+</div>
+
+<script language="javascript">
+    var app = angular.module('signUpPage', []);
+    app.controller('signUpController', function($scope, $http, $window) {
+        $scope.submit = function() {
+            $window.sessionStorage.name = $scope.username;
+
+            var login_http = $http({
+                method: 'POST',
+                url: '/signUp',
+                params: { username: $scope.username, password: $scope.password }
+            }).then(
+                    function (successfulResponse) {
+                        alert(successfulResponse.data[0].user_id);
+                        $window.sessionStorage.id = successfulResponse.data[0].user_id;
+                        alert($window.sessionStorage.id);
+                        $window.location.href = '/casinoHomePage';
+                    }, function (errorResponse) {
+                        alert("illegal username");
+                    }
+            )
+        }
+    });
+</script>
+
+</body>
+</html>
